@@ -5,6 +5,7 @@ ha_category:
   - Car  
   - Lock
   - Binary Sensor
+  - Sensor
 ha_release: 0.117
 ha_iot_class: Cloud Polling
 ha_config_flow: true
@@ -13,12 +14,13 @@ ha_codeowners:
 ha_domain: fordpass
 ---
 
-The `FordPass` integration offers integration with the [FordPass](https://www.ford.co.uk/owner/owner-services/fordpass) API/app and provides various entities, e.g. lock to unlock/lock the vehicle and binary sensors for doors, windows, ignition and more.
+The `FordPass` integration offers integration with the [FordPass](https://www.ford.co.uk/owner/owner-services/fordpass) API/app and provides various entities, e.g. lock to unlock/lock the vehicle, binary sensors for doors, windows, ignition, sensors for odometer, oil level, fuel, battery, tire pressures and more.
 
 This integration provides the following platforms:
 
 - Lock - Lock/Unlock the doors
 - Binary Sensor - Tracks state of Doors (open/closed), Windows (open/closed), Ignition (on/off), Alarm (on/off)
+- Sensor - Odometer, fuel, battery, oil, tire pressures
 
 ## Configuration
 
