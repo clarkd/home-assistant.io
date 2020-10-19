@@ -8,6 +8,7 @@ ha_category:
   - Switch
   - Binary Sensor
   - Sensor
+ha_iot_class: Local Push
 ha_release: pre 0.7
 ha_codeowners:
   - '@danielhiversen'
@@ -21,9 +22,9 @@ There is currently support for the following device types within Home Assistant:
 
 - [Cover](#covers)
 - [Light](#lights)
+- [Switch](#switches)
 - [Sensor](#sensors)
 - [Binary Sensor](#binary-sensors)
-- [Switch](#switch)
 
 To enable RFXtrx in your installation, something like the following to your `configuration.yaml` file.
 

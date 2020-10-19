@@ -24,7 +24,7 @@ Different families have different functionality and can measure different quanti
 | 12     | [DS2406(TAI-8570)](https://datasheets.maximintegrated.com/en/ds/DS2406.pdf)  | Temperature (pressure when using TAI-8570) |
 | 1D     | [DS2423](https://datasheets.maximintegrated.com/en/ds/DS2423.pdf)            | Counter                         |
 | 22     | [DS1822](https://datasheets.maximintegrated.com/en/ds/DS1822.pdf)            |                                 |
-| 26     | [DS2438/B1-R1-A/S2-R1-A](https://datasheets.maximintegrated.com/en/ds/DS2438.pdf)| Temperature, Voltage, Current, (pressure and humidity when using TAI-8570) |
+| 26     | [DS2438](https://datasheets.maximintegrated.com/en/ds/DS2438.pdf)            | Temperature, Voltage, Current (pressure when using B1-R1-A, illuminance when using S2-R1-A, humidity when using compatible Honeywell or Humirel sensor) |
 | 28     | [DS18B20](https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf)          | Temperature                     |
 | 3B     | [DS1825](https://datasheets.maximintegrated.com/en/ds/DS1825.pdf)            | Temperature                     |
 | 42     | [DS28EA00](https://datasheets.maximintegrated.com/en/ds/DS28EA00.pdf)        | Temperature                     |
@@ -88,13 +88,21 @@ The device IDs begin with `28-`.
 
 ## Interface adapter setup
 
-### owfs
-
-When an interface adapter is used, sensors can be accessed on Linux hosts via [owfs 1-Wire file system](https://owfs.org/). When using an interface adapter and the owfs, the `mount_dir` option must be configured to correspond to a directory, where owfs device tree has been mounted. On systems where Home Assistant runs in a Docker container. `owfs` cannot escape that environment and hence cannot populate the `mount_dir`. Use the owserver method on these systems instead.
-
 ### owserver
 
-When an interface adapter is used, you can also access sensors on a remote or local Linux host that is running owserver.  owserver by default runs on port 4304. Use the `host` option to specify the host or IP of the remote server, and the optional `port` option to change the port from the default.
+`owsever` on Linux hosts is part of the [owfs 1-Wire file system](https://owfs.org/). When a 1-wire interface adapter is used, you can access sensors on a remote or local Linux host that is running `owserver`. `owserver` by default runs on port 4304. Use the `host` option to specify the host or IP of the remote server, and the optional `port` option to change the port from the default.
+
+### owfs - (Soon to be deprecated)
+
+It is also possible to use `owfs`, the filesystem portion of the package, to access 1-wire sensors but not advised as it will be deprecated in an upcoming release. See this [pull request](https://github.com/home-assistant/core/pull/42041) for more information.
+
+The [owfs project page on GitHub](https://github.com/owfs/owfs) says:
+
+> Despite the project name, the owfs package itself is **NOT** recommended for any real use, it has well known issues with races etc.
+
+If you still choose to use `owfs`, the `mount_dir` option must be configured to correspond to a directory, where owfs device tree has been mounted. On systems where Home Assistant runs in a Docker container `owfs` cannot escape that environment and hence cannot populate the `mount_dir`. Use the `owserver` method on these systems instead.
+
+
 
 ## Configuration
 

@@ -1,6 +1,6 @@
 ---
-title: "Xiaomi Miio"
-description: "Instructions on how to integrate Xiaomi devices using the Xiaomi Miio integration within Home Assistant."
+title: Xiaomi Miio
+description: Instructions on how to integrate Xiaomi devices using the Xiaomi Miio integration within Home Assistant.
 ha_category:
   - Hub
   - Fan
@@ -15,6 +15,7 @@ ha_release: 0.51
 ha_codeowners:
   - '@rytilahti'
   - '@syssi'
+  - '@starkillerOG'
 ha_domain: xiaomi_miio
 ha_config_flow: true
 ---
@@ -31,7 +32,7 @@ The `xiaomi_miio` integration supports the following devices:
 - [Xiaomi Philips Light](#xiaomi-philips-light)
 - [Xiaomi Smart WiFi Socket and Smart Power Strip](#xiaomi-smart-wifi-socket-and-smart-power-strip)
 
-For many of these devices you need a acces token, the first section will describe how to obtain that acces token.
+For many of these devices you need an access token, the first section will describe how to obtain that access token.
 
 ## Retrieving the Access Token
 
@@ -62,7 +63,7 @@ After resetting the Wi-Fi settings of the Xiaomi robot vacuum, a new Access Toke
 <br/> <br/>
 These instructions are written for the Mi Home app - not for the new RoboRock app.
 <br/> <br/>
-This token (32 hexadecimal characters) is required for the Xiaomi Mi Robot Vacuum, Mi Robot 2 (Roborock) Vacuum, Xiaomi Philips Lights and Xiaomi IR Remote. The Xiaomi Gateway uses another security method and requires a `key` (16 alphanumeric chars), which can be obtained easily via a hidden menu item at the Mi-Home app or using the `miio` command line tool.
+This token (32 hexadecimal characters) is required for the Xiaomi Mi Robot Vacuum, Mi Robot 2 (Roborock) Vacuum, Xiaomi Philips Lights and Xiaomi IR Remote.
 </div>
 
 ### Android (not rooted)
@@ -192,25 +193,26 @@ name:
 
 ### Supported Xiaomi gateway models:
 
-| Gateway name       | Zigbee id           | model        | supported                                 |
-| ------------------ | ------------------- | ------------ |------------------------------------------ |
-| Chinese version    | lumi.gateway.v3     | DGNWG02LM    | yes                                       |
-| European version   | lumi.gateway.mieu01 | ZHWG11LM-763 | only gateway features (no subdevices yet) |
-| Aqara hub          | lumi.gateway.aqhm01 | ZHWG11LM     | untested                                  |
-| Mijia Zigbee 3.0   | lumi.gateway.mgl03  | ZNDMWG03LM   | untested                                  |
-| Aqara AC Companion | lumi.acpartner.v1   | KTBL01LM     | untested                                  |
-| Mi AC Companion    | lumi.acpartner.v2   | KTBL02LM     | untested                                  |
-| Aqara AC Companion | lumi.acpartner.v3   | KTBL11LM     | yes                                       |
+| Gateway name       | Zigbee id           | model                    | supported                                 |
+| ------------------ | ------------------- | ------------------------ |------------------------------------------ |
+| Chinese version    | lumi.gateway.v3     | DGNWG02LM                | yes                                       |
+| European version   | lumi.gateway.mieu01 | ZHWG11LM-763 / DGNWQ05LM | only gateway features (no subdevices yet) |
+| Aqara hub          | lumi.gateway.aqhm01 | ZHWG11LM                 | untested                                  |
+| Mijia Zigbee 3.0   | lumi.gateway.mgl03  | ZNDMWG03LM               | untested                                  |
+| Aqara AC Companion | lumi.acpartner.v1   | KTBL01LM                 | untested                                  |
+| Mi AC Companion    | lumi.acpartner.v2   | KTBL02LM                 | untested                                  |
+| Aqara AC Companion | lumi.acpartner.v3   | KTBL11LM                 | yes                                       |
 
 ### Gateway Features
 
 - Gateway alarm control (Turn on/off; see status `armed_away`, `disarmed`, `arming`)
+- Gateway light control (Turn on/off; change brightness; change color; see status)
+- Gateway illuminance sensor readout (illuminance value in lux)
 
 Not yet implemented features (but possible):
 
-- Gateway light control
-- Gateway light sensor readout
 - Gateway internet radio (only chinese stations)
+- Gateway ringtones/sounds
 
 ### Supported subdevices
 
@@ -319,7 +321,7 @@ Supported devices:
 | Air Purifier 2 (mini)  | zhimi.airpurifier.m1   | |
 | Air Purifier (mini)    | zhimi.airpurifier.m2   | |
 | Air Purifier MA1       | zhimi.airpurifier.ma1  | |
-| Air Purifier 2S        | zhimi.airpurifier.ma2  | |
+| Air Purifier MA2       | zhimi.airpurifier.ma2  | |
 | Air Purifier 2S        | zhimi.airpurifier.mc1  | |
 | Air Purifier Super     | zhimi.airpurifier.sa1  | |
 | Air Purifier Super 2   | zhimi.airpurifier.sa2  | |
@@ -1224,7 +1226,7 @@ automation:
     condition: []
     action:
     - service: xiaomi_miio.vacuum_clean_zone
-      data_template:
+      data:
         entity_id: vacuum.xiaomi_vacuum
         repeats: '{{states('input_number.vacuum_passes')|int}}'
         zone: [[30914,26007,35514,28807], [20232,22496,26032,26496]]
@@ -1244,7 +1246,7 @@ automation:
     condition: []
     action:
     - service: xiaomi_miio.vacuum_clean_zone
-      data_template:
+      data:
         entity_id: vacuum.xiaomi_vacuum
         repeats: '{{states('input_number.vacuum_passes')|int}}'
         zone:
@@ -1303,7 +1305,7 @@ Example of `xiaomi_miio.vacuum_clean_segment` use:
 Multiple segments:
 ```yaml
 automation:
-  - alias: Vaccum kitchen and living room
+  - alias: Vacuum kitchen and living room
     trigger:
     - event: start
       platform: homeassistant
@@ -1363,7 +1365,7 @@ The following table shows the units of measurement for each attribute:
 | `total_cleaned_area`      | square meter        | Total cleaned area in square meters                            |
 | `total_cleaning_time`     | minutes             | Total cleaning time in minutes                                 |
 | `clean_start`             | datetime            | The last date/time the vacuum started cleaning (offset naive)  |
-| `clean_end`               | datetime            | The last date/time the vacuum finished cleaning (offset naive) |
+| `clean_stop`               | datetime            | The last date/time the vacuum finished cleaning (offset naive) |
 
 ### Example on how to clean a specific room
 
@@ -1443,7 +1445,7 @@ Valid room numbers can be retrieved using miio command-line tool:
 miio protocol call <ip of the vacuum> get_room_mapping
 ```
 
-It will only give room numbers and not the room names. To mat the room numbers to your actual rooms, one can just test the clean_segment service with a number and see which room it cleans. The Xiaomi Home App will highlight the room after issuing the request, which makes the process rather convenient.
+It will only give room numbers and not the room names. To map the room numbers to your actual rooms, one can just test the clean_segment service with a number and see which room it cleans. The Xiaomi Home App will highlight the room after issuing the request, which makes the process rather convenient.
 
 It seems to be the case that Numbers 1..15 are used to number the intitial segmentation done by the vacuum cleaner itself. Numbers 16 and upwards numbers rooms from the users manual editing.
 
@@ -1647,7 +1649,7 @@ Please follow the instructions on [Retrieving the Access Token](/integrations/xi
 
 ### Xiaomi Smart WiFi Socket
 
-Supported models: `chuangmi.plug.m1`, `chuangmi.plug.m3`, `chuangmi.plug.v2`, `chuangmi.plug.hmi205`
+Supported models: `chuangmi.plug.m1`, `chuangmi.plug.m3`, `chuangmi.plug.v2`, `chuangmi.plug.hmi205`, `chuangmi.plug.hmi206`
 
 - Power (on, off)
 - Attributes
@@ -1655,7 +1657,7 @@ Supported models: `chuangmi.plug.m1`, `chuangmi.plug.m3`, `chuangmi.plug.v2`, `c
 
 ### Xiaomi Chuangmi Plug V1
 
-Supported models: `chuangmi.plug.v1`, `chuangmi.plug.v3`
+Supported models: `chuangmi.plug.v1`, `chuangmi.plug.v3`, `chuangmi.plug.hmi208`
 
 - Power (on, off)
 - USB (on, off)
@@ -1712,7 +1714,7 @@ name:
   type: string
   default: Xiaomi Miio Switch
 model:
-  description: The model of your miio device. Valid values are `chuangmi.plug.v1`, `qmi.powerstrip.v1`, `zimi.powerstrip.v2`, `chuangmi.plug.m1`, `chuangmi.plug.m3`, `chuangmi.plug.v2`, `chuangmi.plug.v3` and `chuangmi.plug.hmi205`. This setting can be used to bypass the device model detection and is recommended if your device isn't always available.
+  description: The model of your miio device. Valid values are `chuangmi.plug.v1`, `qmi.powerstrip.v1`, `zimi.powerstrip.v2`, `chuangmi.plug.m1`, `chuangmi.plug.m3`, `chuangmi.plug.v2`, `chuangmi.plug.v3`, `chuangmi.plug.hmi205` and `chuangmi.plug.hmi208`. This setting can be used to bypass the device model detection and is recommended if your device isn't always available.
   required: false
   type: string
 {% endconfiguration %}

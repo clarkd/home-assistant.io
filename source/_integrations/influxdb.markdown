@@ -97,6 +97,11 @@ max_retries:
   description: Set this to allow the integration to retry if there was a network error when transmitting data.
   required: false
   default: 0
+precision:
+  type: string
+  description: Set this to specify the time precision sent to influxdb. Setting a coarser precision allows InfluxDb to compress your data better. If not set, defaults to ns.
+  required: false
+  default: ns
 default_measurement:
   type: string
   description: Measurement name to use when an entity doesn't have a unit. 
@@ -117,7 +122,7 @@ exclude:
       required: false
     entity_globs:
       type: [string, list]
-      description: Include all entities matching a listed pattern.
+      description: Exclude all entities matching a listed pattern.
       required: false
     domains:
       type: [string, list]
@@ -134,7 +139,7 @@ include:
       required: false
     entity_globs:
       type: [string, list]
-      description: Exclude all entities matching a listed pattern.
+      description: Include all entities matching a listed pattern.
       required: false
     domains:
       type: [string, list]
@@ -149,6 +154,10 @@ tags_attributes:
   description: The list of attribute names which should be reported as tags and not fields to InfluxDB. For example, if set to `friendly_name`, it will be possible to group by entities' friendly names as well, in addition to their ids.
   required: false
   default: 0
+ignore_attributes:
+  type: [string, list]
+  description: The list of attribute names to ignore when reporting to InfluxDB. This can be used to filter out attributes that either don't change or don't matter to you in order to reduce the amount of data stored in InfluxDB.
+  required: false
 component_config:
   type: string
   required: false
@@ -157,6 +166,10 @@ component_config:
     override_measurement:
       type: string
       description: Measurement name to use instead of a unit or default measurement. This will store all data points in a single measurement.
+      required: false
+    ignore_attributes:
+      type: [string, list]
+      description: The list of attribute names to ignore when reporting to InfluxDB. Will be merged with the default `ignore_attributes` list when processing a state change event for a particular entity.
       required: false
 component_config_domain:
   type: string
@@ -167,6 +180,10 @@ component_config_domain:
       type: string
       description: Measurement name to use instead of a unit or default measurement. This will store all data points in a single measurement.
       required: false
+    ignore_attributes:
+      type: [string, list]
+      description: The list of attribute names to ignore when reporting to InfluxDB. Will be merged with the default `ignore_attributes` list when processing a state change event for a particular entity.
+      required: false
 component_config_glob: 
   type: string
   required: false
@@ -175,6 +192,10 @@ component_config_glob:
     override_measurement:
       type: string
       description: Measurement name to use instead of unit or default measurement. This will store all data points in a single measurement.
+      required: false
+    ignore_attributes:
+      type: [string, list]
+      description: The list of attribute names to ignore when reporting to InfluxDB. Will be merged with the default `ignore_attributes` list when processing a state change event for a particular entity.
       required: false
 {% endconfiguration %}
 
@@ -327,7 +348,7 @@ sensor:
         name: "Mean humidity reported from past day"
         query: >
           filter(fn: (r) => r._field == "value" and r.domain == "sensor" and strings.containsStr(v: r.entity_id, substr: "humidity"))
-          |> keep(columns: ["_value"])\n"
+          |> keep(columns: ["_value"])
         range_start: "-1d"
 ```
 

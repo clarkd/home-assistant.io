@@ -1,7 +1,6 @@
 ---
 title: "Z-Wave Device Specific Settings"
 description: "Notes for specific Z-Wave devices."
-redirect_from: /getting-started/z-wave-device-specific/
 ---
 
 ## Device Categories
@@ -1130,7 +1129,7 @@ automation:
           entity_id: zwave.scene_contrl
     action:
       - service: zwave.refresh_node_value
-        data_template:
+        data:
           node_id: 3
           value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
 switch:
@@ -1140,13 +1139,13 @@ switch:
         value_template: "{{ states('sensor.scene_contrl_indicator')|int|bitwise_and(1) > 0 }}"
         turn_on:
           service: zwave.set_node_value
-          data_template:
+          data:
             node_id: 3
             value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
             value: "{{ states('sensor.scene_contrl_indicator')|int + 1 }}"
         turn_off:
           service: zwave.set_node_value
-          data_template:
+          data:
             node_id: 3
             value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
             value: "{{ states('sensor.scene_contrl_indicator')|int - 1 }}"
@@ -1154,13 +1153,13 @@ switch:
         value_template: "{{ states('sensor.scene_contrl_indicator')|int|bitwise_and(2) > 0 }}"
         turn_on:
           service: zwave.set_node_value
-          data_template:
+          data:
             node_id: 3
             value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
             value: "{{ states('sensor.scene_contrl_indicator')|int + 2 }}"
         turn_off:
           service: zwave.set_node_value
-          data_template:
+          data:
             node_id: 3
             value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
             value: "{{ states('sensor.scene_contrl_indicator')|int - 2 }}"
@@ -1168,13 +1167,13 @@ switch:
         value_template: "{{ states('sensor.scene_contrl_indicator')|int|bitwise_and(4) > 0 }}"
         turn_on:
           service: zwave.set_node_value
-          data_template:
+          data:
             node_id: 3
             value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
             value: "{{ states('sensor.scene_contrl_indicator')|int + 4 }}"
         turn_off:
           service: zwave.set_node_value
-          data_template:
+          data:
             node_id: 3
             value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
             value: "{{ states('sensor.scene_contrl_indicator')|int - 4 }}"
@@ -1182,13 +1181,13 @@ switch:
         value_template: "{{ states('sensor.scene_contrl_indicator')|int|bitwise_and(8) > 0 }}"
         turn_on:
           service: zwave.set_node_value
-          data_template:
+          data:
             node_id: 3
             value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
             value: "{{ states(scene_contrl_indicator)|int + 8 }}"
         turn_off:
           service: zwave.set_node_value
-          data_template:
+          data:
             node_id: 3
             value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
             value: "{{ states('sensor.scene_contrl_indicator')|int - 8 }}"
@@ -1196,13 +1195,13 @@ switch:
         value_template: "{{ states('sensor.scene_contrl_indicator')|int|bitwise_and(16) > 0 }}"
         turn_on:
           service: zwave.set_node_value
-          data_template:
+          data:
             node_id: 3
             value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
             value: "{{ states('sensor.scene_contrl_indicator')|int + 16 }}"
         turn_off:
           service: zwave.set_node_value
-          data_template:
+          data:
             node_id: 3
             value_id: "{{ state_attr('sensor.scene_contrl_indicator','value_id') }}"
             value: "{{ states('sensor.scene_contrl_indicator')|int - 16 }}"
@@ -1227,7 +1226,19 @@ To get the Z-Push Button 2 or the Z-Push Button 8 working in Home Assistant, you
         </CommandClass>
     ```
 
-    - 5.2 For the Z-Push Button 8:
+    - 5.2 For the Z-Push Button 4:
+
+    ```xml
+        <CommandClass id="91" name="COMMAND_CLASS_CENTRAL_SCENE" version="1" request_flags="4" innif="true" scenecount="0">				<Instance index="1" />
+      <Value type="int" genre="system" instance="1" index="0" label="Scene Count" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
+      <Value type="int" genre="user" instance="1" index="1" label="Button 1" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
+      <Value type="int" genre="user" instance="1" index="2" label="Button 2" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
+      <Value type="int" genre="user" instance="1" index="3" label="Button 3" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
+      <Value type="int" genre="user" instance="1" index="4" label="Button 4" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
+        </CommandClass>
+    ```
+    
+    - 5.3 For the Z-Push Button 8:
 
     ```xml
         <CommandClass id="91" name="COMMAND_CLASS_CENTRAL_SCENE" version="1" request_flags="4" innif="true" scenecount="0">				<Instance index="1" />
@@ -1444,8 +1455,8 @@ The configuration parameters will have to be added to the `zwcfg` file. Replace 
     <Item label="Disabled" value="0"/>
     <Item label="Enabled (default)" value="1"/>
   </Value>
-  <Value type="byte" genre="config" index="3" label="Motion Sensativity" size="1" min="1" max="10" value="10">
-    <Help>Adjust motion sensitivity where 10 is the most sensative setting.
+  <Value type="byte" genre="config" index="3" label="Motion Sensitivity" size="1" min="1" max="10" value="10">
+    <Help>Adjust motion sensitivity where 10 is the most sensitive setting.
     default: 10
     </Help>
   </Value>

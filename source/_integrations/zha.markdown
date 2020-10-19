@@ -21,8 +21,9 @@ ha_codeowners:
 ha_domain: zha
 ---
 
-[Zigbee Home Automation](https://zigbeealliance.org)
-integration for Home Assistant allows you to connect many off-the-shelf Zigbee based devices to Home Assistant, using one of the available Zigbee radio modules that is compatible with [zigpy](https://github.com/zigpy/zigpy) (an open source Python library implementing a Zigbee stack, which in turn relies on separate libraries which can each interface a with Zigbee radio module a different manufacturer).
+The ZHA (Zigbee Home Automation) integration allows you to connect many off-the-shelf [Zigbee based devices](https://zigbeealliance.org) directly to Home Assistant, using one of the many available Zigbee coordinators.
+
+ZHA uses an open-source Python library implementing a hardware-independent Zigbee stack called [zigpy](https://github.com/zigpy/zigpy). All coordinators compatible with zigpy can be used with ZHA.
 
 There is currently support for the following device types within Home Assistant:
 
@@ -39,7 +40,7 @@ There is also support for grouping of lights, switches, and fans (i.e. support f
 
 ## ZHA exception and deviation handling
 
-Zigbee devices that deviate from or do not fully conform to the standard specifications set by the [Zigbee Alliance](https://zigbeealliance.org) may require the development of custom [ZHA Device Handlers](https://github.com/dmulcahey/zha-device-handlers) (ZHA custom quirks handler implementation) to for all their functions to work properly with the ZHA integration in Home Assistant. These ZHA Device Handlers for Home Assistant can thus be used to parse custom messages to and from Zigbee devices.
+Zigbee devices that deviate from or do not fully conform to the standard specifications set by the [Zigbee Alliance](https://zigbeealliance.org) may require the development of custom [ZHA Device Handlers](https://github.com/dmulcahey/zha-device-handlers) (ZHA custom quirks handler implementation) for all their functions to work properly with the ZHA integration in Home Assistant. These ZHA Device Handlers for Home Assistant can thus be used to parse custom messages to and from Zigbee devices.
 
 The custom quirks implementations for zigpy implemented as ZHA Device Handlers for Home Assistant are a similar concept to that of [Hub-connected Device Handlers for the SmartThings Classics platform](https://docs.smartthings.com/en/latest/device-type-developers-guide/) as well as that of [Zigbee-Shepherd Converters as used by Zigbee2mqtt](https://www.zigbee2mqtt.io/how_tos/how_to_support_new_devices.html), meaning they are each virtual representations of a physical device that expose additional functionality that is not provided out-of-the-box by the existing integration between these platforms.
 
@@ -54,28 +55,29 @@ ZHA integration uses a hardware independent Zigbee stack implementation with mod
   - [ConBee USB adapter from dresden elektronik](https://phoscon.de/conbee)
   - [RaspBee II (a.k.a. RaspBee 2) Raspberry Pi Shield from dresden elektronik](https://www.dresden-elektronik.com/product/raspbee-II.html)
   - [RaspBee Raspberry Pi Shield from dresden elektronik](https://phoscon.de/raspbee)
-- EmberZNet based radios using the EZSP protocol (via the [bellows](https://github.com/zigpy/bellows) library for zigpy)
-  - [ITEAD Sonoff ZBBridge](https://www.itead.cc/smart-home/sonoff-zbbridge.html) (Note! This first have to be flashed with [Tasmota firmware and EmberZNet 6.5.x.x](https://www.digiblur.com/2020/07/how-to-use-sonoff-zigbee-bridge-with.html))
-  - [Nortek GoControl QuickStick Combo Model HUSBZB-1 (Z-Wave & Zigbee USB Adapter)](https://www.nortekcontrol.com/products/2gig/husbzb-1-gocontrol-quickstick-combo/)
-  - [Elelabs Zigbee USB Adapter](https://elelabs.com/products/elelabs_usb_adapter.html)
-  - [Elelabs Zigbee Raspberry Pi Shield](https://elelabs.com/products/elelabs_zigbee_shield.html)
+- Silicon Labs EmberZNet based radios using the EZSP protocol (via the [bellows](https://github.com/zigpy/bellows) library for zigpy)
+  - [ITEAD Sonoff ZBBridge](https://www.itead.cc/smart-home/sonoff-zbbridge.html) (Note! This first have to be flashed with [Tasmota firmware and Silabs EmberZNet NCP EZSP UART Host firmware](https://www.digiblur.com/2020/07/how-to-use-sonoff-zigbee-bridge-with.html))
+  - [Nortek GoControl QuickStick Combo Model HUSBZB-1 (Z-Wave & Zigbee Ember 3581 USB Adapter)](https://www.nortekcontrol.com/products/2gig/husbzb-1-gocontrol-quickstick-combo/) (Note! Not a must but recommend [upgrade the EmberZNet NCP application firmware](https://github.com/walthowd/husbzb-firmware))
+  - [Elelabs Zigbee USB Adapter](https://elelabs.com/products/elelabs_usb_adapter.html) (Note! Not a must but recommend [upgrade the EmberZNet NCP application firmware](https://github.com/Elelabs/elelabs-zigbee-ezsp-utility))
+  - [Elelabs Zigbee Raspberry Pi Shield](https://elelabs.com/products/elelabs_zigbee_shield.html) (Note! Not a must but recommend [upgrade the EmberZNet NCP application firmware](https://github.com/Elelabs/elelabs-zigbee-ezsp-utility))
+  - Bitron Video/Smabit BV AV2010/10 USB-Stick with Silicon Labs Ember 3587
   - Telegesis ETRX357USB (Note! This first have to be flashed with other EmberZNet firmware)
   - Telegesis ETRX357USB-LRS (Note! This first have to be flashed with other EmberZNet firmware)
   - Telegesis ETRX357USB-LRS+8M (Note! This first have to be flashed with other EmberZNet firmware)
-- XBee Zigbee based radios (via the [zigpy-xbee](https://github.com/zigpy/zigpy-xbee) library for zigpy)
+- Digi XBee Zigbee based radios (via the [zigpy-xbee](https://github.com/zigpy/zigpy-xbee) library for zigpy)
   - Digi XBee Series 3 (xbee3-24) modules
   - Digi XBee Series 2C (S2C) modules
   - Digi XBee Series 2 (S2) modules (Note! This first have to be flashed with Zigbee Coordinator API firmware)
 
 ### Experimental support for additional Zigbee radio modules
 
-- Texas Instruments CC253x, CC26x2R, and CC13x2 based radios (via the [zigpy-cc](https://github.com/zigpy/zigpy-cc) library for zigpy)
-  - [CC2531 USB stick hardware flashed with custom Z-Stack coordinator firmware from the Zigbee2mqtt project](https://www.zigbee2mqtt.io/getting_started/what_do_i_need.html)
-  - [CC2530 + CC2591 USB stick hardware flashed with custom Z-Stack coordinator firmware from the Zigbee2mqtt project](https://www.zigbee2mqtt.io/getting_started/what_do_i_need.html)
-  - [CC2530 + CC2592 dev board hardware flashed with custom Z-Stack coordinator firmware from the Zigbee2mqtt project](https://www.zigbee2mqtt.io/getting_started/what_do_i_need.html)
-  - [CC2652R dev board hardware flashed with custom Z-Stack coordinator firmware from the Zigbee2mqtt project](https://www.zigbee2mqtt.io/getting_started/what_do_i_need.html)
-  - [CC1352P-2 dev board hardware flashed with custom Z-Stack coordinator firmware from the Zigbee2mqtt project](https://www.zigbee2mqtt.io/getting_started/what_do_i_need.html)
-  - [CC2538 + CC2592 dev board hardware flashed with custom Z-Stack coordinator firmware from the Zigbee2mqtt project](https://www.zigbee2mqtt.io/getting_started/what_do_i_need.html)
+- Texas Instruments based radios with Z-Stack 3.x.x (via the [zigpy-znp](https://github.com/zha-ng/zigpy-znp) library for zigpy)
+  - [CC2652P/CC2652R/CC2652RB USB stick or dev board hardware flashed with Z-Stack 3.x.x coordinator firmware](https://www.zigbee2mqtt.io/information/supported_adapters)
+  - [CC1352P/CC1352R USB stick or dev board hardware flashed with Z-Stack 3.x.x coordinator firmware](https://www.zigbee2mqtt.io/information/supported_adapters)
+- Texas Instruments based radios with Z-Stack Home 1.2.x (via the [zigpy-cc](https://github.com/zigpy/zigpy-cc) library for zigpy)
+  - [CC2531 USB stick hardware flashed with Z-Stack Home 1.2.x coordinator firmware](https://www.zigbee2mqtt.io/information/supported_adapters)
+  - [CC2530 + CC2591/CC2592 USB stick hardware flashed with Z-Stack Home 1.2.x coordinator firmware](https://www.zigbee2mqtt.io/information/supported_adapters)
+  - [CC2538 + CC2592 dev board hardware flashed with Z-Stack Home 1.2.x coordinator firmware](https://www.zigbee2mqtt.io/information/supported_adapters)
 - ZiGate based radios (via the [zigpy-zigate](https://github.com/zigpy/zigpy-zigate) library for zigpy and require firmware 3.1a or later)
   - [ZiGate USB-TTL](https://zigate.fr/produit/zigate-ttl/)
   - [ZiGate USB-DIN](https://zigate.fr/produit/zigate-usb-din/)
@@ -101,11 +103,12 @@ a new pop-up asking for a radio type. In the pop-up:
 
 | Radio Type | Zigbee Radio Hardware |
 | ------------- | ------------- |
-| `ezsp`  | Silicon Labs EmberZNet protocol (ex; Elelabs, HUSBZB-1, Telegesis) |
-| `deconz` | dresden elektronik deCONZ protocol: ConBee I/II, RaspBee I/II |
-| `ti_cc` | Texas Instruments Z-Stack ZNP protocol (ex: CC253x, CC26x2, CC13x2) |
-| `zigate` | ZiGate Serial protocol: PiZiGate, ZiGate USB-TTL, ZiGate WiFi |
-| `xbee` | Digi XBee ZB Coordinator Firmware protocol (Digi XBee Series 2, 2C, 3) |
+| `ezsp`  | Silicon Labs EmberZNet protocol (e.g., Elelabs, HUSBZB-1, Telegesis) |
+| `deconz` | dresden elektronik deCONZ protocol (e.g., ConBee I/II, RaspBee I/II) |
+| `znp` | Texas Instruments new (active): Z-Stack 3.x.x ZNP protocol (e.g., CC26x2, CC13x2) |
+| `ti_cc` | Texas Instruments legacy & HA12: Z-Stack Home 1.2.x ZNP protocol (e.g., CC253x) |
+| `zigate` | ZiGate Serial protocol (e.g., ZiGate USB-TTL, PiZiGate, ZiGate WiFi) |
+| `xbee` | Digi XBee ZB Coordinator Firmware protocol (e.g., Digi XBee Series 2, 2C, 3) |
 
 - Submit
 
@@ -115,11 +118,11 @@ radio type. In the pop-up:
 - port speed (not applicable for all radios)
 - data flow control (not applicable for all radios)
 
-Most devices need at very least the serial device path, like `/dev/ttyUSB0`, but it is recommended to use
+Most devices need at the very least the serial device path, like `/dev/ttyUSB0`, but it is recommended to use
 device path from `/dev/serial/by-id` folder,
-eg `/dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_C0F003D3-if01-port0`
+e.g., `/dev/serial/by-id/usb-Silicon_Labs_HubZ_Smart_Home_Controller_C0F003D3-if01-port0`
 
-Press `Submit` The success dialog will appear or an error will be displayed in the popup. An error is likely if Home Assistant can't access the USB device or your device is not up to date. Refer to [Troubleshooting](#troubleshooting) below for more information.
+Press `Submit`. The success dialog will appear or an error will be displayed in the popup. An error is likely if Home Assistant can't access the USB device or your device is not up to date. Refer to [Troubleshooting](#troubleshooting) below for more information.
 
 If you are use ZiGate or Sonoff ZBBridge you have to use some special usb_path configuration:
 
@@ -142,6 +145,45 @@ enable_quirks:
 
 To add new devices to the network, call the `permit` service on the `zha` domain. Do this by clicking the Service icon in Developer tools and typing `zha.permit` in the **Service** dropdown box. Next, follow the device instructions for adding, scanning or factory reset.
 
+
+## Services
+
+### Service `zha.permit`
+
+This service opens network for joining new devices.
+
+|  Data | Optional | Description |
+| ---- | ---- | ----------- |
+| `duration` |  yes | For how long to allow new devices to join, default 60s
+| `ieee` | yes | allow new devices to join via an existing device
+
+To join a new device using an install code (ZB3 devices) use the following data attributes (must use parameters only
+from the same group:
+
+|  Data | Parameter Group | Description |
+| ---- | ---- | ----------- |
+| `src_ieee` | install_code | The IEEE address of the joining ZB3 device. Use with `install_code`
+| `install_code` | install_code | Install Code of the joining device. Use with `src_ieee`
+| `qr_code` | qr_code | QR code containing IEEE and Install Code of the joining ZB3 device
+
+<div class='note'>
+
+  Currently `qr_code` supports QR Install Codes from:
+  
+  - Aqara
+  - Consciot
+  - Embrighten
+
+</div>
+
+### Service `zha.remove`
+
+This service remove an existing device from the network.
+
+|  Data | Optional | Description |
+| ---- | ---- | ----------- |
+| `ieee` | no | IEEE address of the device to remove 
+
 ### OTA firmware updates
 
 ZHA component does have the ability to automatically download and perform OTA (Over-The-Air) firmware updates of Zigbee devices if the OTA firmware provider source URL for updates is available. OTA firmware updating is set to disabled (`false`) in the configuration by default.
@@ -163,6 +205,18 @@ You can choose if the IKEA or LEDVANCE provider should be set to enabled (`true`
 
 Note that the `otau_directory` setting is optional and can be used for any firmware files you have downloaded yourself.
 
+### Defining Zigbee channel to use
+
+```yaml
+zha:
+  zigpy_config:
+    network:
+      channel: 15             # What channel the radio should try to use.
+      channels: [15, 20, 25]  # Channel mask
+```
+
+This is a good reference for channel selection [Zigbee and Wifi Coexistance](https://support.metageek.com/hc/en-us/articles/203845040-ZigBee-and-WiFi-Coexistence)
+
 ## Adding devices
 
 To add a new device:
@@ -173,6 +227,14 @@ To add a new device:
 1. Once the device is found, it will appear on that page and will be automatically added to your devices. You can optionally change its name and add it to an area (you can change this later). You can search again to add another device, or you can go back to the list of added devices.
 
 ## Troubleshooting
+
+To help resolve any kinks or compatibility problems by reporting bugs as issues with debug logs. Please follow the instructions in this troubleshooting section.
+
+### Knowing which devices are supported
+
+There is no official compatibility list of supported devices for the simple reason that practically all devices Zigbee Home Automation that are fully compliant with the standards and specifications as set by the [Zigbee Alliance](https://zigbeealliance.org) the should technically be compatible with this ZHA integration. The fact however remains that some hardware manufacturers do not always fully comply with each set specification which can cause a few devices to only partially work or not work at all with ZHA, but developers can create workarounds for such issues via a solution for 'ZHA exception and deviation handling' that this implementation features, please see that section for more information.
+
+Tip to new users is that while there is no official list of supported devices, some ZHA users take comfort that blakadder maintains an unofficial Zigbee Device Compatibility Repository which anyone can submit compatibility reports to, it can be found at [zigbee.blakadder.com](https://zigbee.blakadder.com) and currently contains independent compatibility lists and device pairing tips for several home automation gateway/bridge/hub software, including but not limited to open source Zigbee implementations such as; ZHA, Tasmota, Zigbee2MQTT, and ZiGate.
 
 ### Reporting issues
 
@@ -185,7 +247,7 @@ When reporting issues, please provide the following information in addition to i
 
 ### Debug logging
 
-To enable debug logging for ZHA component ard radio libraries, add the following [logger](https://www.home-assistant.io/integrations/logger/) configuration to `configuration.yaml`:
+To enable debug logging for ZHA component and radio libraries, add the following [logger](/integrations/logger/) configuration to `configuration.yaml`:
 
 ```yaml
 logger:
@@ -202,6 +264,7 @@ logger:
     zigpy_xbee.zigbee.application: debug
     zigpy_xbee.api: debug
     zigpy_zigate: debug
+    zigpy_znp: debug
     zhaquirks: debug
 ```
 
@@ -216,7 +279,7 @@ Using a Philips Hue Dimmer Switch is probably the easiest way to factory-reset y
 1. Turn on your Hue bulb you want to reset
 2. Hold the Dimmer Switch near your bulb (< 10 cm)
 3. Press and hold the (I)/(ON) and (O)/(OFF) buttons of the Dimmer Switch for about 10 seconds until your bulb starts to blink
-4. Your bulb should stop blinking and eventually turning on again. At the same time, a green light on the top left of your remote indicates that your bulb has been successfully reset to factory settings.
+4. Your bulb should stop blinking and eventually turn on again. At the same time, a green light on the top left of your remote indicates that your bulb has been successfully reset to factory settings.
 
 #### hue-thief
 
@@ -226,7 +289,7 @@ Follow the instructions on [https://github.com/vanviegen/hue-thief/](https://git
 
 On Linux hosts ZHA can fail to start during HA startup or restarts because the Zigbee USB device is being claimed by the host's modemmanager service. To fix this disable the modemmanger on the host system.
 
-To remove modemmanager from an Debian/Ubuntu host run this command:
+To remove modemmanager from a Debian/Ubuntu host run this command:
 
 ```bash
 sudo apt-get purge modemmanager
